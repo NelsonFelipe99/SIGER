@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">SIGER</string>
+    <string name="title_activity_home">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Inicio</string>
+    <string name="menu_gallery">Reserva</string>
+    <string name="menu_slideshow">Platos</string>
+    <string name="title_activity_main_home">MainActivity_home</string>
+    <string name="title_activity_main2">MainActivity2</string>
+
+    <string name="risoto">  *Arroz bomba, 320 g ·90g por comensal
+    * Gambas, 200 g
+    * Calamar, 200 g
+    * Pimiento rojo, 1
+    * Azafrán, 10 hebras
+    * Fumet de pescado, 800 ml
+    * Tinta calamar, 10 g
+    * Ajo tierno, 200 g
+    * Puerro, 1
+    * Aceite de oliva virgen extra arbequino, 100 ml
+    * Sal
+    * Alioli para acompañar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

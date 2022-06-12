@@ -1,19 +1,36 @@
 package com.example.siger;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.example.siger.BBDD.BDreserva;
+import com.example.siger.Metodos.Reserva;
+import com.example.siger.databinding.FragmentGalleryBinding;
+import com.example.siger.ui.gallery.GalleryViewModel;
+
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link editar_reserva#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class editar_reserva extends Fragment {
+public class editar_reserva extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,6 +40,16 @@ public class editar_reserva extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private GalleryViewModel galleryViewModel;
+    private FragmentGalleryBinding binding;
+    private TextView fecha,hora, comentario;
+    private Button btn_fecha, btn_hora,btn_enviarR;
+    private int dia, mes, year, time, minutos;
+    private BDreserva bdR;
+
+
+
 
     public editar_reserva() {
         // Required empty public constructor
@@ -61,4 +88,95 @@ public class editar_reserva extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_editar_reserva, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        fecha =view.findViewById(R.id.txt_fecha);
+        hora = view.findViewById(R.id.txt_hora);
+        comentario = view.findViewById(R.id.edit_comentario);
+
+        btn_fecha = view.findViewById(R.id.btn_fecha);
+        btn_hora = view.findViewById(R.id.btn_hora);
+        btn_enviarR = view.findViewById(R.id.btn_enviarR);
+
+
+        btn_fecha.setOnClickListener(this);
+        btn_hora.setOnClickListener(this);
+        btn_enviarR.setOnClickListener(this);
+        bdR =new BDreserva(getContext());
+
+    }
+
+
+    //Evento para el calendario
+    @Override
+    public void onClick(View view) {
+        if (view==btn_fecha){
+            final Calendar calen = Calendar.getInstance();
+            dia=calen.get(Calendar.DAY_OF_MONTH);
+            mes = calen.get(Calendar.MONTH);
+            year = calen.get(Calendar.YEAR);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker datePicker, int ano, int mesAno, int day) {
+
+                    if (ano>=year&&mesAno>=mes&&day>=dia){
+                        fecha.setText(day+"/"+(mesAno)+"/"+ano);
+
+                    }else{
+                        Toast.makeText(getContext(), "Fecha no disponible", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+                    ,year,mes,dia);
+            datePickerDialog.show();
+
+        }
+        //Evento para la hora
+        if(view==btn_hora){
+            final Calendar horaC = Calendar.getInstance();
+            time = horaC.get(Calendar.HOUR_OF_DAY);
+            minutos= horaC.get(Calendar.MINUTE);
+
+            TimePickerDialog timePickerDialog =new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int horas, int minute) {
+
+
+                    hora.setText(horas+":"+minute);
+
+                }
+            },time,minutos,false);
+            timePickerDialog.show();
+
+        }
+//Aqui estoy enviando la informacion de la reserva.
+        switch (view.getId()){
+            case R.id.btn_enviarR:
+                Reserva r= new Reserva();
+                r.setFecha(fecha.getText().toString());
+                r.setHora(hora.getText().toString());
+                r.setComentario(comentario.getText().toString());
+
+                if(!r.isNull()){
+                    Toast.makeText(getContext(), "Error: los campos estan vacios", Toast.LENGTH_SHORT).show();
+                }else if(bdR.insertReserve(r)){
+                    Toast.makeText(getContext(),"Sus cambios se han guardado con exito", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(view).navigate(R.id.nav_home);
+
+                }
+        }
+
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+
 }
